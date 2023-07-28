@@ -90,13 +90,13 @@ def kurs_ekle():
         cursor.close()
         return render_template("kurs_ekle.html", kurslar=kurslar)
 
-@app.route('/kullanici_kurs_ekle', methods=['GET', 'POST'])
-def kullanici_kurs_ekle():
+@app.route('/kullanici_kurs_ekle/<string:username>', methods=['GET', 'POST'])
+def kullanici_kurs_ekle(username):
     if request.method == 'POST':
         # Retrieve form data
         kurs_adi = request.form.get('kurs_adi')
         kurs_veren_okul = request.form.get('kurs_veren_okul')
-        kurs_admin_username = request.form.get('kurs_admin_username')
+        kurs_admin_username = username
         kurs_aciklama = request.form.get('kurs_aciklama')
         kurs_tarih = request.form.get('kurs_tarih')
         kurs_kontenjan = request.form.get('kurs_kontenjan')
@@ -121,7 +121,7 @@ def kullanici_kurs_ekle():
         cursor.execute("SELECT kurs_adi FROM kurs")
         kurslar = cursor.fetchall()
         cursor.close()
-        return render_template("kullanici_kurs_ekle.html", kurslar=kurslar)
+        return render_template("kullanici_kurs_ekle.html", kurslar=kurslar,username=username)
 
 @app.route('/ilanlar')
 def ilanlar():
