@@ -423,26 +423,39 @@ def kurs_detay(kurs_ilan_id):
 @app.route('/rezervasyon/<int:kurs_ilan_id>', methods=["GET", "POST"])
 def rezervasyon(kurs_ilan_id):
     if request.method == 'POST':
-        
         try:
-            # Retrieve form data
+            # Form verilerini al
             ogrenci_isim = request.form.get('ogrenci_isim')
             ogrenci_soyisim = request.form.get('ogrenci_soyisim')
             ogrenci_telefon = request.form.get('ogrenci_telefon')
             ogrenci_email = request.form.get('ogrenci_email')
 
             cursor = connect.cursor()
-            cursor.execute("""
-            INSERT INTO ogrenci (ogrenci_isim, ogrenci_soyisim, ogrenci_telefon_no, ogrenci_email)
 
-            OUTPUT inserted.ogrenci_id
-            VALUES (?, ?, ?, ?)
+            # Öğrencinin ogrenci tablosunda zaten var olup olmadığını kontrol et
+            cursor.execute("""
+                SELECT ogrenci_id FROM ogrenci
+                WHERE ogrenci_isim = ? AND ogrenci_soyisim = ? 
+                AND ogrenci_telefon_no = ? AND ogrenci_email = ?
             """, (ogrenci_isim, ogrenci_soyisim, ogrenci_telefon, ogrenci_email))
-            row = cursor.fetchone()  # Get the last inserted row
-            ogrenci_id = row[0]  # Get the student ID
+            
+            existing_student = cursor.fetchone()
+
+            if existing_student:
+                ogrenci_id = existing_student[0]
+            else:
+                # Yeni öğrenciyi ogrenci tablosuna ekle
+                cursor.execute("""
+                    INSERT INTO ogrenci (ogrenci_isim, ogrenci_soyisim, ogrenci_telefon_no, ogrenci_email)
+                    OUTPUT inserted.ogrenci_id
+                    VALUES (?, ?, ?, ?)
+                """, (ogrenci_isim, ogrenci_soyisim, ogrenci_telefon, ogrenci_email))
+                row = cursor.fetchone()  # Son eklenen satırı al
+                ogrenci_id = row[0]  # Öğrenci ID'sini al
 
             connect.commit()
 
+            # Rezervasyon için gerekli bilgileri al ve rezervasyon yap
             cursor.execute("SELECT * FROM kurslar_ilan WHERE kurs_ilan_id=?", (kurs_ilan_id,))
             ilan = cursor.fetchone()
 
@@ -455,6 +468,7 @@ def rezervasyon(kurs_ilan_id):
                 """, (kurs_ilan_id, ogrenci_id, rezervasyon_tarih))
             connect.commit()
 
+            # Kurs kontenjanını azalt
             cursor.execute("""
                 UPDATE kurslar_ilan
                 SET kurs_kontenjan = kurs_kontenjan - 1
@@ -465,6 +479,7 @@ def rezervasyon(kurs_ilan_id):
 
             cursor.close()
 
+            # Başarılı rezervasyon için şablonu döndür
             return render_template("rezervasyon_basarili.html", ogrenci_isim=ogrenci_isim, ogrenci_soyisim=ogrenci_soyisim,
                                    ogrenci_telefon=ogrenci_telefon, ogrenci_email=ogrenci_email,
                                    kurs_ilan_id=ilan.kurs_ilan_id, kurs_adi=ilan.kurs_adi, aciklama=ilan.kurs_aciklama)
@@ -472,8 +487,8 @@ def rezervasyon(kurs_ilan_id):
             print("Hata:", str(e))
             return "<script>alert('Rezervasyon sırasında bir hata oluştu.');</script>"
     else:
+        # Sayfayı göster
         return render_template("rezervasyon.html")
-
 
 
 
