@@ -1,0 +1,34 @@
+{% extends 'admin_layout.html' %}
+
+{% block content %}
+<!-- ogrenciler.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head kısmı devamı -->
+</head>
+<body>
+    <h1>Öğrenciler</h1>
+    <div>
+        <a href="/ogrenci_ekle">Yeni Öğrenci Ekle</a>
+    </div>
+    <table>
+        <!-- Tablo başlıkları devamı -->
+        {% for ogrenci in ogrenciler %}
+        <tr>
+            <td>{{ ogrenci.ogrenci_id }}</td>
+            <td>{{ ogrenci.ogrenci_isim }}</td>
+            <td>{{ ogrenci.ogrenci_soyisim }}</td>
+            <td>{{ ogrenci.ogrenci_telefon_no }}</td>
+            <td>{{ ogrenci.ogrenci_email }}</td>
+            <td><a href="/ogrenci_duzenle/{{ ogrenci.ogrenci_id }}">Düzenle</a></td>
+            <td><a href="/ogrenci_sil/{{ ogrenci.ogrenci_id }}">Sil</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+   
+</body>
+</html>
+
+{% endblock %}

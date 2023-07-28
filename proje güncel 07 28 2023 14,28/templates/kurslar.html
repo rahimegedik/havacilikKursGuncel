@@ -1,0 +1,150 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kurslar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .framed-card {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: transform 0.2s ease-in-out;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .framed-card .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .framed-card .card-header {
+            background-color: #f2f2f2;
+            border-bottom: none;
+            text-align: center;
+            font-weight: bold;
+            padding: 0.75rem 1rem;
+        }
+
+        .framed-card .card-body {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .framed-card .kurs-adi {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .framed-card .kurs-kontenjan {
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+
+        .framed-card .kontenjan-label {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        /* Remove underlines from links */
+        .framed-card .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Create a responsive card layout */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .col-md-4 {
+            flex: 0 0 calc(33.33% - 20px);
+            /* Adjust the width and gap based on your requirement */
+            max-width: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container my-5">
+        <h1 class="mb-4 text-center">Kurslar</h1>
+        <input type="text" id="searchInput" placeholder="Kurs adıyla ara...">
+        
+        <div class="row">
+            {% for kurs in kurslar_ilan %}
+            <div class="col-md-4">
+                <div class="framed-card">
+                    {% if kurs.kurs_kontenjan > 0 %}
+                    <a href="/odeme/{{ kurs.kurs_ilan_id }}" class="card-link" onclick="return true;">
+                    {% else %}
+                    <a href="#" class="card-link" onclick="alert('Kontenjan dolu!'); return false;">
+                    {% endif %}
+                        <div class="card">
+                            <div class="card-header">
+                                {{ kurs.kurs_adi }}
+                            </div>
+                            <div class="card-body">
+                                <span class="kontenjan-label">Kontenjan</span>
+                                {% if kurs.kurs_kontenjan > 0 %}
+                                {% if kurs.kurs_kontenjan <= 3 %} <span >Son {{
+                                    kurs.kurs_kontenjan }} kontenjan kaldı!</span>
+                                    {% elif kurs.kurs_kontenjan < 5 %} <span >Son 5 kontenjan
+                                        kaldı!</span>
+                                        {% else %}
+                                        {{ kurs.kurs_kontenjan }}
+                                        {% endif %}
+                                        {% else %}
+                                        <span >Dolu</span>
+                                        {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    // JavaScript function for filtering kurslar
+    function filterKurslar() {
+        var input, filter, cards, cardHeaders, i, txtValue;
+        input = document.getElementById('searchInput');
+        filter = input.value.toUpperCase();
+        cards = document.getElementsByClassName('framed-card');
+
+        for (i = 0; i < cards.length; i++) {
+            cardHeaders = cards[i].getElementsByClassName('card-header');
+            txtValue = cardHeaders[0].textContent || cardHeaders[0].innerText;
+
+            // Compare the kurs_adi with the search filter
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                cards[i].style.display = ''; // Show the card
+            } else {
+                cards[i].style.display = 'none'; // Hide the card
+            }
+        }
+    }
+
+    // Add event listener for the input field
+    document.getElementById('searchInput').addEventListener('input', filterKurslar);
+</script>
+
+
+{% endblock %}

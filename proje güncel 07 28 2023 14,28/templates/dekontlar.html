@@ -1,0 +1,30 @@
+{% extends 'admin_layout.html' %}
+
+{% block title %}Dekontlar{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-3">Dekontlar</h2>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Dosya Adı</th>
+                <th scope="col">Eylemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dosya in dekont_dosyalari %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ dosya }}</td>
+                <td>
+                    <a target="_blank" href="{{ url_for('dekont_goster', dosya_adi=dosya) }}" class="btn btn-primary btn-sm">Görüntüle</a>
+                    <a target="_blank" href="{{ url_for('dekont_indir', dosya_adi=dosya) }}" download class="btn btn-success btn-sm">İndir</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'admin_layout.html' %}
+
+{% block content %}
+<!-- ogrenci_duzenle.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head kısmı devamı -->
+</head>
+<body>
+    <h1>Öğrenci Düzenle</h1>
+    <form method="post">
+        <input type="hidden" name="ogrenci_id" value="{{ ogrenci.ogrenci_id }}">
+        <label for="ogrenci_isim">İsim:</label>
+        <input type="text" id="ogrenci_isim" name="ogrenci_isim" value="{{ ogrenci.ogrenci_isim }}" required>
+        <br>
+        <label for="ogrenci_soyisim">Soyisim:</label>
+        <input type="text" id="ogrenci_soyisim" name="ogrenci_soyisim" value="{{ ogrenci.ogrenci_soyisim }}" required>
+        <br>
+        <label for="ogrenci_telefon">Telefon:</label>
+        <input type="text" id="ogrenci_telefon" name="ogrenci_telefon" value="{{ ogrenci.ogrenci_telefon_no }}" required>
+        <br>
+        <label for="ogrenci_email">E-posta:</label>
+        <input type="email" id="ogrenci_email" name="ogrenci_email" value="{{ ogrenci.ogrenci_email }}" required>
+        <br>
+        <input type="submit" value="Güncelle">
+    </form>
+</body>
+</html>
+{% endblock %}
