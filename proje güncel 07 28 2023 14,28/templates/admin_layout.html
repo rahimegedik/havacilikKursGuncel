@@ -114,6 +114,7 @@
         .table .btn {
             margin-right: 5px;
         }
+
         footer {
             background-color: #2d0d96;
             color: #fff;
@@ -139,18 +140,21 @@
                 <li>
                     <a href="{{ url_for('index') }}" class="text-white">Havacılık Kurs</a>
                 </li>
+                <li>
+                    <a href="{{ url_for('admin_panel') }}" class="text-white">Admin Anasayfa</a>
+                </li>
                 <li class="dropdown">
                     <a class="text-white dropdown-toggle" role="button" data-bs-toggle="dropdown">
-                        Admin
+                        Sayfalar
                     </a>
                     <div class="dropdown-menu">
-                        <a href="{{ url_for('admin_panel') }}" class="dropdown-item">Panel</a>
-                        <a href="{{ url_for('dekontlar') }}" class="dropdown-item">Dekontlar</a>
+                        <a href="{{ url_for('dersler') }}" class="dropdown-item">Dersler</a>
                         <a href="{{ url_for('ilanlar') }}" class="dropdown-item">İlanlar</a>
                         <a href="{{ url_for('rezervasyonlar') }}" class="dropdown-item">Rezervasyonlar</a>
                         <a href="{{ url_for('kullanicilar') }}" class="dropdown-item">Kullanıcılar</a>
-                        <a href="{{ url_for('dersler') }}" class="dropdown-item">Dersler</a>
-                        <a href="{{ url_for('ogrenciler') }}" class="dropdown-item">oğrenciler</a>
+                        <a href="{{ url_for('ogrenciler') }}" class="dropdown-item">Öğrenciler</a>
+                        <a href="{{ url_for('dekontlar') }}" class="dropdown-item">Dekontlar</a>
+
                     </div>
                 </li>
                 <li>
