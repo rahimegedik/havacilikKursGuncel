@@ -78,6 +78,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container my-5">
         <h1 class="mb-4 text-center">Kurslar</h1>
@@ -85,7 +86,8 @@
             <span class="input-group-text" id="basic-addon1">
                 <i class="fa fa-search"></i>
             </span>
-            <input type="text" class="form-control" id="searchInput" placeholder="Kurs adıyla ara..." aria-label="Kurs adıyla ara...">
+            <input type="text" class="form-control" id="searchInput" placeholder="Kurs adıyla ara..."
+                aria-label="Kurs adıyla ara...">
         </div>
 
         <div class="row">
@@ -94,32 +96,41 @@
                 <div class="framed-card">
                     {% if kurs.kurs_kontenjan > 0 %}
                     <a href="/odeme/{{ kurs.kurs_ilan_id }}" class="card-link" onclick="return true;">
-                    {% else %}
-                    <a href="#" class="card-link" onclick="alert('Kontenjan dolu!'); return false;">
-                    {% endif %}
-                        <div class="card h-100">
-                            <div class="card-header">
-                                {{ kurs.kurs_adi }}
+                        {% else %}
+                        <a href="#" class="card-link" onclick="alert('Kontenjan dolu!'); return false;">
+                            {% endif %}
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    {{ kurs.kurs_adi }}
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ kurs.kurs_adi }}</h5>
+                                    <p class="card-text">{{ kurs.kurs_aciklama|truncate(100, end='...') }}
+                                        {% if kurs.kurs_kontenjan > 0 %}
+                                        <a class="link" href="/odeme/{{ kurs.kurs_ilan_id }}" class="card-link"
+                                            onclick="return true;">Devamı >></a>
+                                        {% else %}
+
+                                        <a class="disabled-link"
+                                            onclick="alert('Kontenjan dolu!'); return false;">Devamı >></a>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="kontenjan-label">Kontenjan</span>
+                                    {% if kurs.kurs_kontenjan > 0 %}
+                                    {% if kurs.kurs_kontenjan <= 3 %} <span>Son {{ kurs.kurs_kontenjan }} kontenjan
+                                        kaldı!</span>
+                                        {% elif kurs.kurs_kontenjan < 5 %} <span>Son 5 kontenjan kaldı!</span>
+                                            {% else %}
+                                            {{ kurs.kurs_kontenjan }}
+                                            {% endif %}
+                                            {% else %}
+                                            <span>Dolu</span>
+                                            {% endif %}
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ kurs.kurs_adi }}</h5>
-                                <p class="card-text">{{ kurs.kurs_aciklama|truncate(100, end='...') }}
-                                    <a class="disabled-link" onclick="alert('Kontenjan dolu!'); return false;">Devamı >></a>                                </p>
-                            </div>
-                            <div class="card-footer">
-                                <span class="kontenjan-label">Kontenjan</span>
-                                {% if kurs.kurs_kontenjan > 0 %}
-                                {% if kurs.kurs_kontenjan <= 3 %} <span>Son {{ kurs.kurs_kontenjan }} kontenjan kaldı!</span>
-                                    {% elif kurs.kurs_kontenjan < 5 %} <span>Son 5 kontenjan kaldı!</span>
-                                    {% else %}
-                                    {{ kurs.kurs_kontenjan }}
-                                    {% endif %}
-                                {% else %}
-                                <span>Dolu</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </a>
+                        </a>
                 </div>
             </div>
             {% endfor %}
