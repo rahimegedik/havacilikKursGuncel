@@ -57,6 +57,7 @@ def kurslar():
 
 
 # Kurs ilanı ekleme
+
 @app.route('/kurs_ekle', methods=['GET', 'POST'])
 def kurs_ekle():
     if request.method == 'POST':
@@ -84,11 +85,22 @@ def kurs_ekle():
             print("Hata:", str(e))
             return "<script>alert('Kurs eklenirken bir hata oluştu.');</script>"
     else:
-        cursor = connect.cursor()
-        cursor.execute("SELECT kurs_adi FROM kurs")
-        kurslar = cursor.fetchall()
-        cursor.close()
-        return render_template("kurs_ekle.html", kurslar=kurslar)
+        try:
+            cursor = connect.cursor()
+            cursor.execute("SELECT kurs_adi FROM kurs")
+            kurslar = cursor.fetchall()
+
+            cursor.execute("SELECT kurs_admin_username FROM kurs_admin")
+            kurs_admin_usernames = cursor.fetchall()
+
+            cursor.close()
+
+            return render_template("kurs_ekle.html", kurslar=kurslar, kurs_admin_usernames=kurs_admin_usernames)
+        except Exception as e:
+            print("Hata:", str(e))
+            return "<script>alert('Veritabanından veriler alınırken bir hata oluştu.');</script>"
+
+
 
 @app.route('/kullanici_kurs_ekle/<string:username>', methods=['GET', 'POST'])
 def kullanici_kurs_ekle(username):
