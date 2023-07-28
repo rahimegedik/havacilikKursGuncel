@@ -6,13 +6,14 @@
 <html lang="en">
 <head>
     <title>Öğrenciler</title>
-    </head>
+</head>
 <body>
     <div class="container">
         <h1 class="my-4">Öğrenciler</h1>
         <div class="mb-3">
             <a href="/ogrenci_ekle" class="btn btn-primary">Yeni Öğrenci Ekle</a>
         </div>
+        <input type="text" id="filterInput" class="form-control mb-3" placeholder="Arama yapın...">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -41,6 +42,32 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        // Filtreleme işlemini gerçekleştiren JavaScript kodu
+        document.getElementById('filterInput').addEventListener('keyup', function () {
+            const filterValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr'); // Tablo satırlarını seçiyoruz
+
+            rows.forEach(row => {
+                const columns = row.querySelectorAll('td');
+                let matchFound = false;
+
+                columns.forEach(column => {
+                    const columnValue = column.textContent.toLowerCase();
+                    if (columnValue.includes(filterValue)) {
+                        matchFound = true;
+                    }
+                });
+
+                if (matchFound) {
+                    row.style.display = ''; // Eğer eşleşme varsa satırı görünür yap
+                } else {
+                    row.style.display = 'none'; // Eğer eşleşme yoksa satırı gizle
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
